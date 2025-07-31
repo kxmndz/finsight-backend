@@ -34,7 +34,7 @@ module.exports = {
 
     addNew(sim) {
       const uuid = crypto.randomUUID();
-      this._data[uuid] = sim;
+      this._data[uuid] = { uuid, ...sim };
       this.saveToDisk(this._fileName);
     }
 
