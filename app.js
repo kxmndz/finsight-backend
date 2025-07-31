@@ -62,7 +62,8 @@ app.post("/api/new-sim", async (req, res) => {
 
   sims.addNew(output);
   res.json({
-    message: "Data received successfully!",
+    message: "Sim successfully added!",
+    data: output,
     yourData: req.body,
   });
 });
@@ -86,6 +87,7 @@ app.listen(port, () => {
 
 function testData() {
   const testSim = {
+    uuid: "aaaa-aaaaaaaa-aaaa"
     project_name: "finsight",
     target_segment: "bank people??",
     key_features: "AI-powered market simulation for project ideas",
