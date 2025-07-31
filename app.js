@@ -105,4 +105,4 @@ function testData() {
   sims.addNew(testSim);
   console.log(sims.fetchAll());
 }
-testData();
+// testData();
