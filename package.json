@@ -1,0 +1,14 @@
+{
+  "name": "finsight",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Alt + F4",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
