@@ -1,5 +1,6 @@
 const express = require("express");
 const { SimStorage } = require("./sims.js");
+const { runSim } = require("./openai.js");
 
 // Create an instance of the express application
 const app = express();
@@ -49,7 +50,7 @@ app.post("/api/new-sim", (req, res) => {
     compliance_notes,
   } = req.params;
 
-  const inputdata = {
+  const inputData = {
     project_name,
     target_segment,
     key_features,
@@ -57,7 +58,7 @@ app.post("/api/new-sim", (req, res) => {
     compliance_notes,
   };
 
-  const output = runSim(inputData);
+  const output = await runSim(inputData);
 
   sims.addNew(output);
   res.json({
@@ -72,18 +73,6 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
   console.log("Press Ctrl+C to stop the server.");
 });
-
-function runSim(inputData) {
-  const {
-    project_name,
-    target_segment,
-    key_features,
-    market_conditions,
-    compliance_notes,
-  } = inputData;
-
-  // TODO: implement prompt
-}
 
 function testData() {
   const testSim = {
