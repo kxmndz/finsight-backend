@@ -41,7 +41,7 @@ app.get("/api/get-sim/:simId", (req, res) => {
 });
 
 // make a new sim
-app.post("/api/new-sim", (req, res) => {
+app.post("/api/new-sim", async (req, res) => {
   const {
     project_name,
     target_segment,
@@ -64,6 +64,16 @@ app.post("/api/new-sim", (req, res) => {
   res.json({
     message: "Data received successfully!",
     yourData: req.body,
+  });
+});
+
+// delete a specific sim
+app.get("/api/delete-sim/:simId", (req, res) => {
+  const simId = req.params.simId;
+  sims.removeSim(simId);
+  res.json({
+    message: `Successfully deleted sim ${simId}`,
+    timestamp: new Date().toISOString(),
   });
 });
 
