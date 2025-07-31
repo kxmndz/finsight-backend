@@ -52,18 +52,18 @@ module.exports.runSim = async function (inputData) {
 
   ### Evaluation Inputs:
 
-  project_name: ${project_name}
-  target_segment: ${target_segment}
-  key_features: ${key_features}
-  market_conditions: ${market_conditions}
-  compliance_notes: ${compliance_notes}
+  project_name: {${project_name}}
+  target_segment: {${target_segment}}
+  key_features: {${key_features}}
+  market_conditions: {${market_conditions}}
+  compliance_notes: {${compliance_notes}}
 
   Ensure that your response is clear, well-justified, and free from informal or speculative language. You are acting as a decision-support system, not a creative writer.
 
   Only respond with **valid JSON**.
 `;
 
-  const data = JSON.parse(await getChatGPTResponse(prompt));
+  const sim_results = JSON.parse(await getChatGPTResponse(prompt));
 
-  return data;
+  return { ...inputData, sim_results };
 };
