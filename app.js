@@ -87,7 +87,7 @@ app.listen(port, () => {
 
 function testData() {
   const testSim = {
-    uuid: "aaaa-aaaaaaaa-aaaa"
+    uuid: "aaaa-aaaaaaaa-aaaa",
     project_name: "finsight",
     target_segment: "bank people??",
     key_features: "AI-powered market simulation for project ideas",
