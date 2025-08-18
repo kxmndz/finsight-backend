@@ -13,6 +13,9 @@ export const Button = ({
 	const variantStyles = {
 		default: "bg-blue-600 text-white hover:bg-blue-700",
 		outline: "border border-gray-300 text-gray-700 bg-white hover:bg-gray-100",
+		rerun:
+			"border border-purple-300 text-purple-700 bg-white hover:bg-purple-100",
+		delete: "border border-red-300 text-red-700 bg-white hover:bg-red-100",
 		ghost: "bg-transparent text-gray-700 hover:bg-gray-100",
 		secondary: "bg-gray-100 text-gray-800 hover:bg-gray-200",
 	};

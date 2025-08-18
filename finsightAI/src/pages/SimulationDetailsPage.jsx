@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { simulations } from "../utils/testData";
 import Header from "../components/layout/Header";
 import SimulationDetailsItem from "../components/ui/SimulationDetailsItem";
 import TitleCard from "../components/cards/TitleCard";
 import Modal from "../components/ui/Modal";
+import Button from "../components/ui/Button";
+import NewSimulationForm from "../components/forms/NewSimulationForm";
+import RerunSimulationForm from "../components/forms/RerunSimulationForm";
+import DeleteSimulationForm from "../components/forms/DeleteSimulationForm";
 
 const SimulationDetailsPage = () => {
 	const { id } = useParams();
@@ -13,9 +16,11 @@ const SimulationDetailsPage = () => {
 
 	const navigate = useNavigate();
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const openModal = () => setIsModalOpen(true);
-	const closeModal = () => setIsModalOpen(false);
+	// track which modal is open
+	const [modalType, setModalType] = useState(null); // "new" | "rerun" | null
+
+	const openModal = (type) => setModalType(type);
+	const closeModal = () => setModalType(null);
 
 	useEffect(() => {
 		const found = simulations.find((sim) => String(sim.id) === String(id));
@@ -26,22 +31,32 @@ const SimulationDetailsPage = () => {
 
 	return (
 		<div className="bg-gray-50 min-h-screen">
-			<Header onNewSimulationClick={openModal} />
+			<Header onNewSimulationClick={() => openModal("new")} />
 			<div className="container mx-auto px-20 py-8 space-y-8 flex flex-col">
 				<div className="max-w-6xl mx-auto p-6 space-y-6">
-					<div className="relative group w-full">
-						<TitleCard title={simulation.name}>
-							<p>{simulation.segment}</p>
-						</TitleCard>
-
-						<button
-							onClick={() => navigate(-1)}
-							className="absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 bg-white text-blue-600 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in hover:cursor-pointer"
-							aria-label="Back"
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+						<Button variant="outline" size="md" onClick={() => navigate(-1)}>
+							Return to Dashboard
+						</Button>
+						<Button
+							variant="rerun"
+							size="md"
+							onClick={() => openModal("rerun")}
 						>
-							←
-						</button>
+							Re-run Simulation
+						</Button>
+						<Button
+							variant="delete"
+							size="md"
+							onClick={() => openModal("delete")}
+						>
+							Delete Simulation
+						</Button>
 					</div>
+
+					<TitleCard title={simulation.name}>
+						<p>{simulation.segment}</p>
+					</TitleCard>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<SimulationDetailsItem
@@ -74,9 +89,15 @@ const SimulationDetailsPage = () => {
 				</div>
 			</div>
 
-			{isModalOpen && (
+			{modalType && (
 				<Modal onClose={closeModal}>
-					<SimulationForm onClose={closeModal} />
+					{modalType === "new" && <NewSimulationForm onClose={closeModal} />}
+					{modalType === "rerun" && (
+						<RerunSimulationForm onClose={closeModal} />
+					)}
+					{modalType === "delete" && (
+						<DeleteSimulationForm onClose={closeModal} />
+					)}
 				</Modal>
 			)}
 		</div>
