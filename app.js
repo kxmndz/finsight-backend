@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const { SimStorage } = require("./sims.js");
 const { runSim } = require("./openai.js");
+const cors = require("cors");
 
 // Create an instance of the express application
 const app = express();
@@ -15,6 +16,8 @@ const JWT_SECRET = "your_secret_key"; // Use env variable in production
 app.use(express.json());
 // Middleware to parse URL-encoded bodies from incoming requests
 app.use(express.urlencoded({ extended: true }));
+// Enable CORS
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/finsight", {
