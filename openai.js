@@ -1,69 +1,43 @@
-require("dotenv").config(); // Load environment variables
-const OpenAI = require("openai");
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+async function runSim(inputData) {
+  const prompt = `
+    Based on the provided information, reply ONLY with a valid JSON object in the following format:
 
-async function getChatGPTResponse(prompt) {
+    {
+      "market_fit": { "score": number, "justification": string },
+      "risk_level": { "category": string, "justification": string },
+      "compliance_status": { "category": string, "justification": string }
+    }
+
+    Do not include any explanation or extra text.
+
+    Project Name: ${inputData.project_name}
+    Target Segment: ${inputData.target_segment}
+    Key Features: ${inputData.key_features}
+    Market Conditions: ${inputData.market_conditions}
+    Compliance Notes: ${inputData.compliance_notes}
+    `;
+
+  const response = await fetch("http://localhost:11434/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "llama3",
+      prompt,
+      stream: false
+    }),
+  });
+
+  const data = await response.json();
+  // Ollama returns { response: "...", ... }
+  // Parse the JSON from the model's response
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Or 'gpt-4o', etc.
-      messages: [{ role: "user", content: prompt }],
-    });
-    return completion.choices[0].message.content;
-  } catch (error) {
-    console.error("Error calling OpenAI API:", error);
-    return null;
+    // Only return the parsed AI output
+    return JSON.parse(data.response);
+  } catch (err) {
+    return { error: "Failed to parse LLM response", raw: data.response };
   }
 }
 
-module.exports.runSim = async function (inputData) {
-  const {
-    project_name,
-    target_segment,
-    key_features,
-    market_conditions,
-    compliance_notes,
-  } = inputData;
-
-  const prompt = `You are an AI simulation engine assisting in evaluating early-stage MSME product ideas within a financial institution. Based on the provided pitch, analyze its market viability, risk level, and compliance alignment. Return your evaluation in structured JSON format.
-
-  ### Your Task:
-
-  Provide a JSON response with the following structure:
-
-  {
-    sim_results: {
-      market_fit: {
-        score: (float between 0.0 and 10.0),
-        justification: (short professional explanation)
-      },
-      risk_level: {
-        category: "low" | "medium" | "high",
-        justification: (brief rationale for risk assessment)
-      },
-      compliance_status: {
-        category: "passed" | "review" | "pending",
-        justification: (brief explanation of compliance concerns or approvals)
-      }
-    }
-  }
-
-  ### Evaluation Inputs:
-
-  project_name: {${project_name}}
-  target_segment: {${target_segment}}
-  key_features: {${key_features}}
-  market_conditions: {${market_conditions}}
-  compliance_notes: {${compliance_notes}}
-
-  Ensure that your response is clear, well-justified, and free from informal or speculative language. You are acting as a decision-support system, not a creative writer.
-
-  Only respond with **valid JSON**.
-`;
-
-  const sim_results = JSON.parse(await getChatGPTResponse(prompt));
-
-  return { ...inputData, sim_results };
-};
+module.exports = { runSim };

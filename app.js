@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
-const { SimStorage } = require("./sims.js");
+// const { SimStorage } = require("./models/Sim.js");
+const Sim = require("./models/Sim")
 const { runSim } = require("./openai.js");
 const cors = require("cors");
 
@@ -61,23 +62,29 @@ app.post("/api/login", async (req, res) => {
   res.json({ token });
 });
 
-// protected routes (require authentication)
-app.get("/api/get-all-sims", authenticateToken, (req, res) => {
-  console.log({ req })
-  res.json({
-    data: sims.fetchAll(),
-    timestamp: new Date().toISOString(),
-  });
+// Protected routes (require authentication)
+// Get all sims for the logged-in user
+app.get("/api/get-all-sims", authenticateToken, async (req, res) => {
+  try {
+    const sims = await Sim.find({ user: req.user.id });
+    res.json({ data: sims, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch simulations." });
+  }
 });
 
-app.get("/api/get-sim/:simId", authenticateToken, (req, res) => {
-  const simId = req.params.simId;
-  res.json({
-    data: sims.fetch(simId),
-    timestamp: new Date().toISOString(),
-  });
+// Get a specific sim by uuid (only if owned by user)
+app.get("/api/get-sim/:simId", authenticateToken, async (req, res) => {
+  try {
+    const sim = await Sim.findOne({ uuid: req.params.simId, user: req.user.id });
+    if (!sim) return res.status(404).json({ error: "Simulation not found." });
+    res.json({ data: sim, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch simulation." });
+  }
 });
 
+// Create a new sim
 app.post("/api/new-sim", authenticateToken, async (req, res) => {
   const {
     project_name,
@@ -87,6 +94,7 @@ app.post("/api/new-sim", authenticateToken, async (req, res) => {
     compliance_notes,
   } = req.body;
 
+  // Define inputData for the LLM
   const inputData = {
     project_name,
     target_segment,
@@ -95,27 +103,43 @@ app.post("/api/new-sim", authenticateToken, async (req, res) => {
     compliance_notes,
   };
 
-  const output = await runSim(inputData);
+  // Generate sim_results using your LLM function
+  const sim_results = await runSim(inputData); // should be ONLY the AI output
+  const uuid = require("crypto").randomUUID();
 
-  sims.addNew(output);
-  res.json({
-    message: "Sim successfully added!",
-    data: output,
-    yourData: req.body,
-  });
+  try {
+    const sim = new Sim({
+      uuid,
+      user: req.user.id,
+      project_name,
+      target_segment,
+      key_features,
+      market_conditions,
+      compliance_notes,
+      sim_results,  // Just the AI output to prevent duplicating
+    });
+    await sim.save();
+    res.json({ message: "Sim successfully added!", data: sim });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to save simulation." });
+  }
 });
 
-app.get("/api/delete-sim/:simId", authenticateToken, (req, res) => {
-  const simId = req.params.simId;
-  sims.removeSim(simId);
-  res.json({
-    message: `Successfully deleted sim ${simId}`,
-    timestamp: new Date().toISOString(),
-  });
+// Delete a sim (only if owned by user)
+app.get("/api/delete-sim/:simId", authenticateToken, async (req, res) => {
+  try {
+    const result = await Sim.deleteOne({ uuid: req.params.simId, user: req.user.id });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Simulation not found or not authorized." });
+    }
+    res.json({ message: `Successfully deleted sim ${req.params.simId}`, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete simulation." });
+  }
 });
 
 // custom class (at bottom of this file) for easier data management
-const sims = new SimStorage();
+// const sims = new SimStorage();
 
 // static serve everything in public/
 app.use(express.static("public"));
