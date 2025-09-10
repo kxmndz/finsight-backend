@@ -1,10 +1,14 @@
 # Finsight AI Backend
 
 ### Installation
+
+Install Node dependencies
 ```sh
 npm install
-paru -S mongodb
 ```
+
+[Install MongoDB](https://www.mongodb.com/docs/manual/installation/)  
+make sure `mongod` is in PATH!  
 
 ### Setup
 
