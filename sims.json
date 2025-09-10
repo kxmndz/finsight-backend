@@ -6,6 +6,7 @@
         "key_features": "AI-powered market simulation for project ideas",
         "market_conditions": "idk, i don't work in finance",
         "compliance_notes": "submissive??",
+        "progress": 87,
         "sim_results": {
             "market_fit": {
                 "score": 3.7,
@@ -16,7 +17,7 @@
                 "justification": "it's all pretend"
             },
             "compliance_status": {
-                "category": "pending",
+                "category": "failed",
                 "justification": "idk what compliance means"
             }
         }
@@ -28,6 +29,7 @@
         "key_features": "sajdhfjsdh",
         "market_conditions": "conditions",
         "compliance_notes": "idk?",
+        "progress": 60,
         "sim_results": {
             "market_fit": {
                 "score": 9.8,
@@ -42,5 +44,29 @@
                 "justification": "idk what compliance means"
             }
         }
+    },
+    "f578b018-53ad-4b6a-ba4a-2c98501079c9": {
+        "uuid": "f578b018-53ad-4b6a-ba4a-2c98501079c9",
+        "project_name": "test3",
+        "target_segment": "segment",
+        "key_features": "feats",
+        "market_conditions": "conditions",
+        "compliance_notes": "compl",
+        "progress": 50,
+        "sim_results": {
+            "market_fit": {
+                "score": 10.0,
+                "justification": "100%"
+            },
+            "risk_level": {
+                "category": "medium",
+                "justification": "it's all pretend"
+            },
+            "compliance_status": {
+                "category": "passed",
+                "justification": "idk what compliance means"
+            }
+        }
     }
+
 }
