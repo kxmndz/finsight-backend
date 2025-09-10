@@ -7,10 +7,8 @@ import Modal from "../components/ui/Modal";
 import SimulationForm from "../components/forms/NewSimulationForm";
 import { simulations } from "../utils/testData";
 
-export const DashboardPage = () => {
-	//TEST DATA
-
-	//FILTERS
+export const DashboardPage = ({ onLogout }) => {
+	// FILTERS
 	const [searchTerm, setSearchTerm] = useState("");
 	const [viewMode, setViewMode] = useState("grid");
 	const [filterStatus, setFilterStatus] = useState("all");
@@ -39,10 +37,10 @@ export const DashboardPage = () => {
 		return matchesSearch && matchesStatus;
 	});
 
-	//DASHBOARD LAYOUT
+	// DASHBOARD LAYOUT
 	return (
 		<div className="bg-gray-50 min-h-screen">
-			<Header onNewSimulationClick={openModal} />
+			<Header onNewSimulationClick={openModal} onLogout={onLogout} />
 			<div className="container mx-auto px-20 py-8 space-y-8 flex flex-col">
 				{/* Filter Card Section */}
 				<section
@@ -90,27 +88,29 @@ export const DashboardPage = () => {
 				</section>
 
 				{/* Simulation Cards */}
-				<section
-					id="dashboard_main"
-					className={`grid ${
-						viewMode === "grid"
-							? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-							: "space-y-4"
-					}`}
-				>
-					{filteredSimulations.map((sim) => (
-						<SimulationCard
-							key={sim.id}
-							id={sim.id}
-							name={sim.name}
-							segment={sim.segment}
-							marketFitScore={sim.marketFitScore}
-							riskLevel={sim.riskLevel}
-							complianceStatus={sim.complianceStatus}
-							progress={sim.progress}
-							lastUpdated={sim.lastUpdated}
-						/>
-					))}
+				<section id="print-area">
+					<section
+						id="dashboard_main"
+						className={`grid ${
+							viewMode === "grid"
+								? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+								: "space-y-4"
+						}`}
+					>
+						{filteredSimulations.map((sim) => (
+							<SimulationCard
+								key={sim.id}
+								id={sim.id}
+								name={sim.name}
+								segment={sim.segment}
+								marketFitScore={sim.marketFitScore}
+								riskLevel={sim.riskLevel}
+								complianceStatus={sim.complianceStatus}
+								progress={sim.progress}
+								lastUpdated={sim.lastUpdated}
+							/>
+						))}
+					</section>
 				</section>
 			</div>
 
