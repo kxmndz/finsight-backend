@@ -63,7 +63,7 @@ app.post("/api/login", async (req, res) => {
 
 // protected routes (require authentication)
 app.get("/api/get-all-sims", authenticateToken, (req, res) => {
-  console.log({ req })
+  // console.log({ req })
   res.json({
     data: sims.fetchAll(),
     timestamp: new Date().toISOString(),
