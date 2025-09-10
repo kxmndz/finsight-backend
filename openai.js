@@ -11,6 +11,7 @@ async function runSim(inputData) {
     }
 
     Do not include any explanation or extra text.
+    For market_fit score, only use any number from 1 to 10.
     For risk_level category, use only "low", "medium", or "high".
     For compliance_status category, use only "passed", "pending", or "failed".
 
