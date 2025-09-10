@@ -1,1 +1,46 @@
-{"d9f6ecec-e827-4e5f-afd7-9122acb91dc7":{"name":"test","desc":"tejbdfjigheu"},"8df957ac-3303-4a5f-88b4-91c8480ffa80":{"project_name":"test","target_segment":"tejbdfjigheu","key_features":"fsdags","market_conditions":"asvbau8","compliance_notes":"awuigv78ea"}}
+{
+    "8df957ac-3303-4a5f-88b4-91c8480ffa80": {
+        "uuid": "8df957ac-3303-4a5f-88b4-91c8480ffa80",
+        "project_name": "finsight",
+        "target_segment": "bank people??",
+        "key_features": "AI-powered market simulation for project ideas",
+        "market_conditions": "idk, i don't work in finance",
+        "compliance_notes": "submissive??",
+        "sim_results": {
+            "market_fit": {
+                "score": 3.7,
+                "justification": "i like 37"
+            },
+            "risk_level": {
+                "category": "low",
+                "justification": "it's all pretend"
+            },
+            "compliance_status": {
+                "category": "pending",
+                "justification": "idk what compliance means"
+            }
+        }
+    },
+    "f578b018-53ad-4b6a-ba4a-2c98501079c8": {
+        "uuid": "f578b018-53ad-4b6a-ba4a-2c98501079c8",
+        "project_name": "test2",
+        "target_segment": "hi",
+        "key_features": "sajdhfjsdh",
+        "market_conditions": "conditions",
+        "compliance_notes": "idk?",
+        "sim_results": {
+            "market_fit": {
+                "score": 9.8,
+                "justification": "98"
+            },
+            "risk_level": {
+                "category": "high",
+                "justification": "it's all pretend"
+            },
+            "compliance_status": {
+                "category": "pending",
+                "justification": "idk what compliance means"
+            }
+        }
+    }
+}
